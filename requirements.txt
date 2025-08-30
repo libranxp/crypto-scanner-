@@ -1,1 +1,8 @@
-pip freeze > requirements.txt
+streamlit
+python-dotenv
+requests
+pandas
+pandas-ta
+scikit-learn
+xgboost
+supabase-py
