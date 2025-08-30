@@ -6,6 +6,6 @@ services:
     startCommand: streamlit run dashboard_app.py
 
 cronJobs:
-  - name: tier1-scan
+  - name: crypto-scan
     schedule: "*/45 8-21 * * *"
-    command: python scanner_core.py
+    command: python scanner.py
