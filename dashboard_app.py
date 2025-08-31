@@ -30,4 +30,4 @@ for coin_id in tickers:
             })
 
 def run_ai_model(data):
-    return 8.2  # Replace with real model later
+    return 8.2
