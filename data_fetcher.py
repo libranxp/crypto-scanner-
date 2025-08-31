@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 import pandas_ta as ta
+import numpy as np  # ✅ Correct import for NaN
 
 def fetch_tickers():
     url = "https://api.coingecko.com/api/v3/coins/markets"
@@ -46,6 +47,8 @@ def fetch_indicators(coin_id):
         df["ema13"] = ta.ema(df["price"], length=13)
         df["ema50"] = ta.ema(df["price"], length=50)
         df["vwap"] = ta.vwap(df["price"], df["volume"])
+
+        df.fillna(np.nan, inplace=True)  # ✅ Correct use of np.nan
 
         latest = df.dropna().iloc[-1]
 
