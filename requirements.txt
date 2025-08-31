@@ -5,4 +5,3 @@ pandas
 pandas-ta
 scikit-learn
 xgboost
-supabase-py
