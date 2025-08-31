@@ -1,8 +1,7 @@
 import streamlit as st
 from data_fetcher import fetch_tickers, fetch_indicators
 from telegram_bot import send_alert
-from supabase_client import supabase  # ✅ Integrated
-import os
+from supabase_client import insert_row
 
 st.set_page_config(page_title="📊 Crypto Momentum Scanner", layout="wide")
 st.title("📊 Crypto Momentum Scanner")
@@ -19,13 +18,13 @@ for ticker in tickers:
             score = run_ai_model(data)
             data["narrative"] = "Bullish sentiment + whale activity"
             send_alert(ticker, data, tier=2, score=score)
-            supabase.table("tier2_scores").insert({
+            insert_row("tier2_scores", {
                 "ticker": ticker,
                 "score": score,
                 "confidence": 0.85,
                 "narrative": data["narrative"],
                 "data": data
-            }).execute()
+            })
 
 def run_ai_model(data):
     # Replace with real ML model
