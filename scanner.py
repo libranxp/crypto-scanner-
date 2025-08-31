@@ -1,9 +1,7 @@
 import os, time
 from data_fetcher import fetch_tickers, fetch_indicators
 from telegram_bot import send_alert
-from supabase import create_client
-
-supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+from supabase_client import supabase  # ✅ Integrated
 
 def tier1_scan():
     tickers = fetch_tickers()
