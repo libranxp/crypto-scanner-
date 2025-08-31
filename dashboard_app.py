@@ -3,8 +3,6 @@ from data_fetcher import fetch_tickers, fetch_indicators
 from telegram_bot import send_alert
 from supabase import create_client
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
@@ -23,8 +21,14 @@ for ticker in tickers:
             score = run_ai_model(data)
             data["narrative"] = "Bullish sentiment + whale activity"
             send_alert(ticker, data, tier=2, score=score)
-            supabase.table("tier2_scores").insert({"ticker": ticker, "score": score, "data": data}).execute()
+            supabase.table("tier2_scores").insert({
+                "ticker": ticker,
+                "score": score,
+                "confidence": 0.85,
+                "narrative": data["narrative"],
+                "data": data
+            }).execute()
 
 def run_ai_model(data):
-    # Placeholder ML logic
+    # Replace with real ML model
     return 8.2
