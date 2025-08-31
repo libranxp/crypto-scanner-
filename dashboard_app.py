@@ -6,12 +6,15 @@ from supabase_client import insert_row
 st.set_page_config(page_title="📊 Crypto Momentum Scanner", layout="wide")
 st.title("📊 Crypto Momentum Scanner")
 
+if st.button("🔁 Refresh Scan"):
+    st.experimental_rerun()
+
 scan_type = st.radio("Scan Type", ["Tier 1", "Tier 2"])
 tickers = fetch_tickers()
 
 for ticker in tickers:
     data = fetch_indicators(ticker)
-    if not data: continue
+    if not isinstance(data, dict): continue
     st.write(f"**{ticker}** | Price: ${data['price']} | RSI: {data['rsi']} | RVOL: {data['rvol']}")
     if scan_type == "Tier 2":
         if st.button(f"Run Deep Scan for {ticker}"):
@@ -27,5 +30,4 @@ for ticker in tickers:
             })
 
 def run_ai_model(data):
-    # Replace with real ML model
-    return 8.2
+    return 8.2  # Replace with real model
