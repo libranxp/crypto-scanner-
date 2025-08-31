@@ -14,7 +14,7 @@ def fetch_tickers():
     try:
         r = requests.get(url, params=params).json()
         return [
-            c["symbol"].upper()
+            c["id"]  # Use CoinGecko ID for indicator fetch
             for c in r
             if (
                 0.005 <= c["current_price"] <= 50 and
@@ -26,10 +26,9 @@ def fetch_tickers():
         print("Error fetching tickers:", e)
         return []
 
-def fetch_indicators(ticker):
+def fetch_indicators(coin_id):
     try:
-        # Use CoinGecko OHLC endpoint for last 1 day (if available)
-        url = f"https://api.coingecko.com/api/v3/coins/{ticker.lower()}/market_chart"
+        url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
         params = {"vs_currency": "usd", "days": "1", "interval": "hourly"}
         r = requests.get(url, params=params).json()
 
@@ -42,7 +41,6 @@ def fetch_indicators(ticker):
         df = pd.DataFrame(prices, columns=["timestamp", "price"])
         df["volume"] = [v[1] for v in volumes]
 
-        # Calculate indicators
         df["rsi"] = ta.rsi(df["price"], length=14)
         df["ema5"] = ta.ema(df["price"], length=5)
         df["ema13"] = ta.ema(df["price"], length=13)
@@ -51,28 +49,19 @@ def fetch_indicators(ticker):
 
         latest = df.dropna().iloc[-1]
 
-        # EMA stack logic
-        if latest["ema5"] > latest["ema13"] > latest["ema50"]:
-            ema_stack = "bullish"
-        else:
-            ema_stack = "neutral"
-
-        # VWAP proximity
+        ema_stack = "bullish" if latest["ema5"] > latest["ema13"] > latest["ema50"] else "neutral"
         vwap_diff = abs(latest["price"] - latest["vwap"]) / latest["vwap"]
-
-        # Pump detection placeholder
-        is_pump = False  # You can add logic based on % spike in short time
 
         return {
             "price": round(latest["price"], 4),
             "volume": int(latest["volume"]),
             "rsi": round(latest["rsi"], 2),
-            "rvol": 2.5,  # Placeholder: replace with real RVOL logic
+            "rvol": 2.5,  # Placeholder
             "ema_stack": ema_stack,
             "vwap_diff": round(vwap_diff, 4),
-            "is_pump": is_pump
+            "is_pump": False
         }
 
     except Exception as e:
-        print(f"Error fetching indicators for {ticker}:", e)
+        print(f"Error fetching indicators for {coin_id}:", e)
         return None
