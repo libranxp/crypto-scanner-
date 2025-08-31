@@ -14,7 +14,7 @@ def fetch_tickers():
     try:
         r = requests.get(url, params=params).json()
         return [
-            c["id"]  # Use CoinGecko ID for indicator fetch
+            c["id"]
             for c in r
             if (
                 0.005 <= c["current_price"] <= 50 and
@@ -56,7 +56,7 @@ def fetch_indicators(coin_id):
             "price": round(latest["price"], 4),
             "volume": int(latest["volume"]),
             "rsi": round(latest["rsi"], 2),
-            "rvol": 2.5,  # Placeholder
+            "rvol": 2.5,
             "ema_stack": ema_stack,
             "vwap_diff": round(vwap_diff, 4),
             "is_pump": False
