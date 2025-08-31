@@ -12,17 +12,17 @@ if st.button("🔁 Refresh Scan"):
 scan_type = st.radio("Scan Type", ["Tier 1", "Tier 2"])
 tickers = fetch_tickers()
 
-for ticker in tickers:
-    data = fetch_indicators(ticker)
+for coin_id in tickers:
+    data = fetch_indicators(coin_id)
     if not isinstance(data, dict): continue
-    st.write(f"**{ticker}** | Price: ${data['price']} | RSI: {data['rsi']} | RVOL: {data['rvol']}")
+    st.write(f"**{coin_id.upper()}** | Price: ${data['price']} | RSI: {data['rsi']} | RVOL: {data['rvol']}")
     if scan_type == "Tier 2":
-        if st.button(f"Run Deep Scan for {ticker}"):
+        if st.button(f"Run Deep Scan for {coin_id.upper()}"):
             score = run_ai_model(data)
             data["narrative"] = "Bullish sentiment + whale activity"
-            send_alert(ticker, data, tier=2, score=score)
+            send_alert(coin_id.upper(), data, tier=2, score=score)
             insert_row("tier2_scores", {
-                "ticker": ticker,
+                "ticker": coin_id.upper(),
                 "score": score,
                 "confidence": 0.85,
                 "narrative": data["narrative"],
@@ -30,4 +30,4 @@ for ticker in tickers:
             })
 
 def run_ai_model(data):
-    return 8.2  # Replace with real model
+    return 8.2  # Replace with real model later
