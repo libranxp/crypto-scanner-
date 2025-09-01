@@ -1,14 +1,17 @@
 from data_fetcher import fetch_indicators
+from sentiment_fetcher import fetch_sentiment
 from telegram_bot import send_alert
 from supabase_client import insert_row
 
 def run_ai_model(data):
-    # Placeholder AI logic
     return 8.2, 0.85, "Bullish sentiment + whale activity"
 
 def run_tier2_scan(coin_id):
     data = fetch_indicators(coin_id)
     if not isinstance(data, dict): return
+
+    sentiment = fetch_sentiment(coin_id)
+    data.update(sentiment)
 
     score, confidence, narrative = run_ai_model(data)
     data["narrative"] = narrative
@@ -23,4 +26,4 @@ def run_tier2_scan(coin_id):
     })
 
 if __name__ == "__main__":
-    run_tier2_scan("bitcoin")  # Replace with dynamic input from dashboard
+    run_tier2_scan("bitcoin")
