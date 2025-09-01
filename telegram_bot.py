@@ -6,6 +6,4 @@ def send_alert(ticker, data, tier=1, score=None):
     if tier == 2:
         msg += f"\n📊 AI Score: {score}/10\n🧠 Reason: {data['narrative']}"
     requests.post(f"https://api.telegram.org/bot{os.getenv('TELEGRAM_TOKEN')}/sendMessage", data={
-        "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
-        "text": msg
-    })
+        "chat_id": os.getenv("TELEGRAM
