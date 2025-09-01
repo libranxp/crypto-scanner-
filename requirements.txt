@@ -1,9 +1,9 @@
 streamlit
 python-dotenv
 requests
-pandas
-pandas-ta
+pandas==1.5.3
+pandas-ta==0.3.14b0
 scikit-learn
 xgboost
-numpy
+numpy==1.23.5
 setuptools
