@@ -3,6 +3,30 @@ import pandas as pd
 import pandas_ta as ta
 import numpy as np  # ✅ Correct import
 
+def fetch_tickers():
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {
+        "vs_currency": "usd",
+        "order": "volume_desc",
+        "per_page": 100,
+        "page": 1,
+        "sparkline": False
+    }
+    try:
+        r = requests.get(url, params=params).json()
+        return [
+            c["id"]
+            for c in r
+            if (
+                0.005 <= c["current_price"] <= 50 and
+                c["market_cap"] >= 20_000_000 and
+                c["total_volume"] > 15_000_000
+            )
+        ]
+    except Exception as e:
+        print("Error fetching tickers:", e)
+        return []
+
 def fetch_indicators(coin_id):
     try:
         url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/market_chart"
